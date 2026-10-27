@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="vi" data-bs-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<title>Nâng cấp Pro – HocLaiXe</title>
+<meta name="description" content="Nâng cấp HocLaiXe Pro: mở khoá cấu tạo hộp số sàn 3D và các tính năng nâng cao.">
+<script>
+  // Áp chủ đề trước khi vẽ trang để không nháy màu
+  (function () {
+    try { var t = localStorage.getItem('sahinh_theme'); if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-bs-theme', t); } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
+<link rel="stylesheet" href="css/home.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<!-- ============ THANH ĐIỀU HƯỚNG ============ -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+      <span class="brand-icon bg-success text-white rounded-3"><i class="bi bi-shield-check"></i></span>
+      HocLaiXe
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Mở menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+        <li class="nav-item"><a class="nav-link" href="sa-hinh.html"><i class="bi bi-car-front"></i> Sa hình <span class="badge text-bg-warning">3D</span></a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-mortarboard"></i> Học tập</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="sa-hinh.html"><i class="bi bi-car-front"></i> Sa hình 3D</a></li>
+            <li><a class="dropdown-item" href="ly-thuyet.html"><i class="bi bi-journal-check"></i> Thi lý thuyết</a></li>
+            <li><a class="dropdown-item" href="mo-phong.html"><i class="bi bi-play-btn"></i> Mô phỏng tình huống</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="xe-co-ban.html"><i class="bi bi-box"></i> Ô tô cơ bản 3D</a></li>
+            <li><a class="dropdown-item" href="hop-so.html"><i class="bi bi-gear-wide-connected"></i> Cấu tạo hộp số sàn <span class="badge text-bg-warning">Pro</span></a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="index.html#noi-dung">11 bài thi</a></li>
+        <li class="nav-item"><a class="nav-link" href="cam-nang.html"><i class="bi bi-book-half"></i> Cẩm nang</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#bang-gia">Bảng giá</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#lien-he">Liên hệ</a></li>
+        <li class="nav-item">
+          <button class="btn btn-link nav-link px-2" id="themeToggle" type="button" aria-label="Chuyển giao diện sáng/tối" title="Chuyển giao diện sáng/tối">
+            <i class="bi bi-moon-stars-fill"></i><span class="d-lg-none ms-2">Giao diện sáng / tối</span>
+          </button>
+        </li>
+        <li class="nav-item ms-lg-2"><a class="btn btn-success btn-sm px-3" data-pro-nav href="nang-cap.html"><i class="bi bi-gem"></i> Nâng cấp Pro</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="flex-grow-1">
+  <div class="container my-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb small mb-2">
+        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="index.html#bang-gia">Bảng giá</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Nâng cấp Pro</li>
+      </ol>
+    </nav>
+    <h1 class="h3 fw-bold mb-1"><i class="bi bi-gem text-warning"></i> Nâng cấp HocLaiXe Pro</h1>
+    <p class="text-body-secondary">Mở khoá cấu tạo hộp số sàn 3D, mô phỏng côn – số và các tính năng Pro khác.</p>
+
+    <div class="alert alert-info small d-flex gap-2 align-items-start" role="note">
+      <i class="bi bi-info-circle-fill fs-5"></i>
+      <div><b>Bản demo cho bài thực hành:</b> quy trình thanh toán được mô phỏng hoàn toàn trên trình duyệt, <b>không chuyển tiền thật</b> và không gửi thông tin đi đâu. Bản thương mại thật cần máy chủ và cổng thanh toán để xác nhận giao dịch.</div>
+    </div>
+
+    <!-- gói hiện tại -->
+    <div class="card border-warning mb-4" id="currentCard" hidden>
+      <div class="card-body d-flex flex-wrap align-items-center gap-3">
+        <div class="display-6 text-warning"><i class="bi bi-patch-check-fill"></i></div>
+        <div class="flex-grow-1">
+          <div class="fw-bold" id="curPlan">Pro</div>
+          <div class="small text-body-secondary" id="curInfo"></div>
+        </div>
+        <a class="btn btn-success" href="hop-so.html"><i class="bi bi-gear-wide-connected"></i> Mở cấu tạo hộp số</a>
+        <button class="btn btn-outline-danger btn-sm" id="btnDeactivate" type="button">Huỷ kích hoạt trên máy này</button>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- ============ CỘT TRÁI: QUY TRÌNH ============ -->
+      <div class="col-lg-8">
+        <form id="checkout" class="vstack gap-4" novalidate>
+          <!-- 1. chọn gói -->
+          <section class="card shadow-sm">
+            <div class="card-header bg-body-tertiary fw-semibold"><span class="badge text-bg-success me-1">1</span> Chọn gói</div>
+            <div class="card-body">
+              <div class="row row-cols-1 row-cols-md-3 g-3" id="planCards"></div>
+            </div>
+          </section>
+
+          <!-- 2. thông tin -->
+          <section class="card shadow-sm">
+            <div class="card-header bg-body-tertiary fw-semibold"><span class="badge text-bg-success me-1">2</span> Thông tin người mua</div>
+            <div class="card-body row g-3">
+              <div class="col-md-6">
+                <label for="fName" class="form-label">Họ và tên</label>
+                <input type="text" class="form-control" id="fName" required minlength="2" autocomplete="name" placeholder="Nguyễn Văn A">
+                <div class="invalid-feedback">Vui lòng nhập họ tên.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="fEmail" class="form-label">Email nhận mã kích hoạt</label>
+                <input type="email" class="form-control" id="fEmail" required autocomplete="email" placeholder="ban@email.com">
+                <div class="invalid-feedback">Email chưa đúng định dạng.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="fPhone" class="form-label">Số điện thoại <span class="text-body-secondary small">(không bắt buộc)</span></label>
+                <input type="tel" class="form-control" id="fPhone" pattern="0[0-9]{9}" autocomplete="tel" placeholder="09xxxxxxxx">
+                <div class="invalid-feedback">Số điện thoại gồm 10 chữ số, bắt đầu bằng 0.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="fCoupon" class="form-label">Mã giảm giá</label>
+                <div class="input-group">
+                  <input type="text" class="form-control text-uppercase" id="fCoupon" placeholder="VD: SINHVIEN">
+                  <button class="btn btn-outline-secondary" type="button" id="btnCoupon">Áp dụng</button>
+                </div>
+                <div class="form-text" id="couponMsg">Sinh viên nhập <b>SINHVIEN</b> để được giảm 20%.</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. thanh toán -->
+          <section class="card shadow-sm">
+            <div class="card-header bg-body-tertiary fw-semibold"><span class="badge text-bg-success me-1">3</span> Phương thức thanh toán</div>
+            <div class="card-body">
+              <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                  <input type="radio" class="btn-check" name="pay" id="payBank" value="bank" checked>
+                  <label class="btn btn-outline-secondary w-100 text-start p-3" for="payBank"><i class="bi bi-bank fs-5"></i> Chuyển khoản ngân hàng<br><small class="text-body-secondary">Quét mã hoặc chuyển khoản thủ công</small></label>
+                </div>
+                <div class="col-md-6">
+                  <input type="radio" class="btn-check" name="pay" id="payWallet" value="wallet">
+                  <label class="btn btn-outline-secondary w-100 text-start p-3" for="payWallet"><i class="bi bi-wallet2 fs-5"></i> Ví điện tử<br><small class="text-body-secondary">Thanh toán qua ứng dụng ví</small></label>
+                </div>
+              </div>
+              <div class="row g-3 align-items-center">
+                <div class="col-sm-4 text-center">
+                  <div class="pay-qr mx-auto rounded-3 border d-grid">
+                    <i class="bi bi-qr-code fs-1"></i>
+                    <span class="small fw-semibold">MÃ QR DEMO</span>
+                  </div>
+                </div>
+                <div class="col-sm-8">
+                  <table class="table table-sm small mb-0">
+                    <tbody>
+                      <tr><th class="fw-normal text-body-secondary">Ngân hàng / ví</th><td class="fw-semibold" id="payProvider">Ngân hàng DEMO</td></tr>
+                      <tr><th class="fw-normal text-body-secondary">Số tài khoản</th><td class="fw-semibold">0000 1234 5678 <span class="badge text-bg-secondary">demo</span></td></tr>
+                      <tr><th class="fw-normal text-body-secondary">Chủ tài khoản</th><td class="fw-semibold">HOCLAIXE DEMO</td></tr>
+                      <tr><th class="fw-normal text-body-secondary">Số tiền</th><td class="fw-semibold text-success" id="payAmount">0đ</td></tr>
+                      <tr><th class="fw-normal text-body-secondary">Nội dung</th><td><code class="fw-semibold" id="payMemo">HLX…</code></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" id="fAgree" required>
+                <label class="form-check-label small" for="fAgree">Tôi đồng ý với <a href="#chinh-sach">điều khoản sử dụng và chính sách hoàn tiền</a>.</label>
+                <div class="invalid-feedback">Bạn cần đồng ý điều khoản để tiếp tục.</div>
+              </div>
+            </div>
+          </section>
+        </form>
+
+        <!-- kích hoạt bằng mã -->
+        <section class="card shadow-sm mt-4" id="kich-hoat">
+          <div class="card-header bg-body-tertiary fw-semibold"><i class="bi bi-key text-warning"></i> Đã có mã kích hoạt?</div>
+          <div class="card-body">
+            <form class="row g-2" id="keyForm" novalidate>
+              <div class="col-sm-8">
+                <label class="visually-hidden" for="keyInput">Mã kích hoạt</label>
+                <input type="text" class="form-control font-monospace text-uppercase" id="keyInput" placeholder="HLX-XXXX-XXXX-XXXX" autocomplete="off">
+                <div class="invalid-feedback" id="keyErr">Mã kích hoạt không hợp lệ.</div>
+              </div>
+              <div class="col-sm-4"><button class="btn btn-warning w-100" type="submit"><i class="bi bi-unlock"></i> Kích hoạt</button></div>
+            </form>
+            <div class="small text-body-secondary mt-2">Mã được gửi qua email sau khi thanh toán. Kích hoạt khi đang còn hạn Pro thì thời hạn được cộng dồn.</div>
+          </div>
+        </section>
+
+        <!-- lịch sử đơn -->
+        <section class="card shadow-sm mt-4">
+          <div class="card-header bg-body-tertiary fw-semibold"><i class="bi bi-receipt text-success"></i> Lịch sử đơn hàng trên máy này</div>
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0 small">
+              <thead><tr><th class="ps-3">Mã đơn</th><th>Ngày</th><th>Gói</th><th class="text-end">Số tiền</th><th class="pe-3">Mã kích hoạt</th></tr></thead>
+              <tbody id="orderBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- chính sách -->
+        <section class="card shadow-sm mt-4" id="chinh-sach">
+          <div class="card-header bg-body-tertiary fw-semibold"><i class="bi bi-shield-check text-success"></i> Điều khoản &amp; chính sách hoàn tiền</div>
+          <div class="card-body small">
+            <ul class="mb-0">
+              <li>Gói Pro áp dụng cho một trình duyệt/thiết bị đã kích hoạt mã.</li>
+              <li>Hoàn tiền 100% trong vòng 7 ngày nếu bạn không hài lòng, liên hệ qua email kèm mã đơn hàng.</li>
+              <li>Gói tháng/năm không tự động gia hạn; bạn chủ động mua thêm khi hết hạn.</li>
+              <li>Nội dung mô phỏng dùng để học tập, không thay thế giáo viên hướng dẫn và phần mềm sát hạch chính thức.</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============ CỘT PHẢI: TÓM TẮT ĐƠN ============ -->
+      <div class="col-lg-4">
+        <div class="card shadow-sm sticky-lg-top" style="top: 80px">
+          <div class="card-header bg-body-tertiary fw-semibold"><i class="bi bi-cart3"></i> Tóm tắt đơn hàng</div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between"><span id="sumPlan">Pro</span><span id="sumSub">0đ</span></div>
+            <div class="sum-row justify-content-between text-success small" id="sumDiscRow" hidden><span id="sumDiscNote">Giảm giá</span><span id="sumDisc">−0đ</span></div>
+            <hr>
+            <div class="d-flex justify-content-between fw-bold fs-5"><span>Tổng cộng</span><span id="sumTotal">0đ</span></div>
+            <div class="small text-body-secondary mb-3">Đã bao gồm VAT · Mã đơn <code id="sumOrder"></code></div>
+            <ul class="list-unstyled small vstack gap-1 mb-3">
+              <li><i class="bi bi-check2 text-success"></i> Cấu tạo hộp số sàn 3D cắt lớp</li>
+              <li><i class="bi bi-check2 text-success"></i> Mô phỏng côn, đồng tốc, sơ đồ H</li>
+              <li><i class="bi bi-check2 text-success"></i> Hướng dẫn từng bước &amp; lỗi hay gặp</li>
+              <li><i class="bi bi-check2 text-success"></i> Cập nhật tính năng Pro mới</li>
+            </ul>
+            <button class="btn btn-success w-100 py-2 fw-semibold" id="btnPay" type="button"><i class="bi bi-lock-fill"></i> Xác nhận đã thanh toán (demo)</button>
+            <div class="small text-body-secondary text-center mt-2"><i class="bi bi-shield-lock"></i> Thanh toán mô phỏng – không trừ tiền thật</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- hộp thoại kết quả -->
+<div class="modal fade" id="doneModal" tabindex="-1" aria-labelledby="doneTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center p-4">
+        <div class="display-5 text-success mb-2"><i class="bi bi-check-circle-fill"></i></div>
+        <h2 class="h4 fw-bold" id="doneTitle">Thanh toán thành công!</h2>
+        <p class="text-body-secondary mb-2" id="doneText"></p>
+        <div class="p-3 rounded-3 bg-body-tertiary border mb-3">
+          <div class="small text-body-secondary">Mã kích hoạt của bạn</div>
+          <div class="fs-4 fw-bold font-monospace" id="doneKey"></div>
+          <button class="btn btn-link btn-sm" id="btnCopyKey" type="button"><i class="bi bi-clipboard"></i> Sao chép</button>
+        </div>
+        <div class="d-grid gap-2">
+          <a class="btn btn-success" href="hop-so.html"><i class="bi bi-gear-wide-connected"></i> Mở cấu tạo hộp số sàn</a>
+          <a class="btn btn-outline-secondary" href="index.html">Về trang chủ</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CHÂN TRANG ============ -->
+<footer class="border-top bg-body-tertiary pt-5 pb-4 mt-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <a class="d-flex align-items-center gap-2 fw-bold fs-5 text-body text-decoration-none mb-2" href="index.html">
+          <span class="brand-icon bg-success text-white rounded-3"><i class="bi bi-shield-check"></i></span> HocLaiXe
+        </a>
+        <p class="small text-body-secondary">Nền tảng luyện thi sát hạch lái xe hạng B: sa hình 3D 11 bài, lý thuyết, mô phỏng tình huống và cấu tạo hộp số sàn 3D (Pro).</p>
+        <div class="small text-body-secondary"><i class="bi bi-envelope"></i> hotro@hoclaixe.demo</div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-mortarboard text-success"></i> Ôn luyện</h6>
+        <ul class="list-unstyled small vstack gap-2">
+          <li><a class="link-secondary text-decoration-none" href="sa-hinh.html">Thi thử sa hình</a></li>
+          <li><a class="link-secondary text-decoration-none" href="sa-hinh.html?mode=practice">Lái thử tự do</a></li>
+          <li><a class="link-secondary text-decoration-none" href="ly-thuyet.html">Thi lý thuyết</a></li>
+          <li><a class="link-secondary text-decoration-none" href="mo-phong.html">Mô phỏng tình huống</a></li>
+          <li><a class="link-secondary text-decoration-none" href="xe-co-ban.html">Ô tô cơ bản 3D</a></li>
+          <li><a class="link-secondary text-decoration-none" href="cam-nang.html">Cẩm nang kỹ thuật</a></li>
+          <li><a class="link-secondary text-decoration-none" href="hop-so.html">Cấu tạo hộp số <span class="badge text-bg-warning">Pro</span></a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-gem text-success"></i> Gói Pro</h6>
+        <ul class="list-unstyled small vstack gap-2">
+          <li><a class="link-secondary text-decoration-none" href="index.html#bang-gia">Bảng giá</a></li>
+          <li><a class="link-secondary text-decoration-none" href="nang-cap.html">Nâng cấp Pro</a></li>
+          <li><a class="link-secondary text-decoration-none" href="nang-cap.html#kich-hoat">Nhập mã kích hoạt</a></li>
+          <li><a class="link-secondary text-decoration-none" href="nang-cap.html#chinh-sach">Chính sách hoàn tiền</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-file-earmark-text text-success"></i> Văn bản</h6>
+        <ul class="list-unstyled small vstack gap-2">
+          <li><a class="link-secondary text-decoration-none" href="https://xaydungchinhsach.chinhphu.vn/toan-van-thong-tu-12-2025-tt-bca-cua-bo-cong-an-quy-dinh-ve-sat-hach-cap-giay-phep-lai-xe-119250303174347028.htm" target="_blank" rel="noopener">Thông tư 12/2025/TT-BCA</a></li>
+          <li><a class="link-secondary text-decoration-none" href="https://cdn.thuvienphapluat.vn/phap-luat/2022-2/NTMH/21122024/QCVN-40-2024.pdf" target="_blank" rel="noopener">QCVN 40:2024/BGTVT</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-gear text-success"></i> Giao diện</h6>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Giao diện">
+          <button type="button" class="btn btn-outline-secondary" data-theme-set="light"><i class="bi bi-sun"></i> Sáng</button>
+          <button type="button" class="btn btn-outline-secondary" data-theme-set="dark"><i class="bi bi-moon-stars"></i> Tối</button>
+        </div>
+      </div>
+    </div>
+    <hr class="my-4">
+    <div class="d-flex flex-wrap justify-content-between gap-2 small text-body-secondary">
+      <span>© <span id="year">2026</span> HocLaiXe – công cụ luyện tập, không phải phần mềm sát hạch chính thức.</span>
+      <span>Thanh toán trên trang là bản demo, không trừ tiền thật.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/license.js"></script>
+<script src="js/nang-cap.js"></script>
+</body>
+</html>

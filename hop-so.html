@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="vi" data-bs-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<title>Cấu tạo hộp số sàn 3D – HocLaiXe</title>
+<meta name="description" content="Mô hình 3D cắt lớp hộp số sàn 5 cấp: xoay 360°, mô phỏng đạp côn, vào số theo sơ đồ H, nhả côn để bánh răng ăn khớp. Tính năng gói Pro của HocLaiXe.">
+<script>
+  // Áp chủ đề trước khi vẽ trang để không nháy màu
+  (function () {
+    try { var t = localStorage.getItem('sahinh_theme'); if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-bs-theme', t); } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
+<link rel="stylesheet" href="css/home.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<!-- ============ THANH ĐIỀU HƯỚNG ============ -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+      <span class="brand-icon bg-success text-white rounded-3"><i class="bi bi-shield-check"></i></span>
+      HocLaiXe
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Mở menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+        <li class="nav-item"><a class="nav-link" href="sa-hinh.html"><i class="bi bi-car-front"></i> Sa hình <span class="badge text-bg-warning">3D</span></a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-mortarboard"></i> Học tập</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="sa-hinh.html"><i class="bi bi-car-front"></i> Sa hình 3D</a></li>
+            <li><a class="dropdown-item" href="ly-thuyet.html"><i class="bi bi-journal-check"></i> Thi lý thuyết</a></li>
+            <li><a class="dropdown-item" href="mo-phong.html"><i class="bi bi-play-btn"></i> Mô phỏng tình huống</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="xe-co-ban.html"><i class="bi bi-box"></i> Ô tô cơ bản 3D</a></li>
+            <li><a class="dropdown-item active" aria-current="page" href="hop-so.html"><i class="bi bi-gear-wide-connected"></i> Cấu tạo hộp số sàn <span class="badge text-bg-warning">Pro</span></a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="index.html#noi-dung">11 bài thi</a></li>
+        <li class="nav-item"><a class="nav-link" href="cam-nang.html"><i class="bi bi-book-half"></i> Cẩm nang</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#bang-gia">Bảng giá</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#lien-he">Liên hệ</a></li>
+        <li class="nav-item">
+          <button class="btn btn-link nav-link px-2" id="themeToggle" type="button" aria-label="Chuyển giao diện sáng/tối" title="Chuyển giao diện sáng/tối">
+            <i class="bi bi-moon-stars-fill"></i><span class="d-lg-none ms-2">Giao diện sáng / tối</span>
+          </button>
+        </li>
+        <li class="nav-item ms-lg-2"><a class="btn btn-success btn-sm px-3" data-pro-nav href="nang-cap.html"><i class="bi bi-gem"></i> Nâng cấp Pro</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="flex-grow-1">
+  <div class="container-xxl my-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb small mb-2">
+        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Cấu tạo hộp số sàn</li>
+      </ol>
+    </nav>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+      <div>
+        <h1 class="h3 fw-bold mb-1"><i class="bi bi-gear-wide-connected text-success"></i> Cấu tạo hộp số sàn &amp; cơ chế sang số <span class="badge text-bg-warning align-middle fs-6"><i class="bi bi-gem"></i> Pro</span></h1>
+        <p class="text-body-secondary mb-0">Mô hình 3D cắt lớp hộp số 5 cấp + số lùi · xoay 360° · mô phỏng côn và cần số theo sơ đồ H</p>
+      </div>
+      <span class="badge rounded-pill text-bg-light border fs-6 fw-normal" id="gateStatus"></span>
+    </div>
+
+    <div class="row g-3">
+      <!-- ============ KHUNG 3D ============ -->
+      <div class="col-xl-8">
+        <div class="card shadow-sm overflow-hidden">
+          <div class="gb-viewer position-relative" id="viewer">
+            <div class="gb-toolbar position-absolute top-0 start-0 m-2 d-flex flex-wrap gap-2">
+              <div class="btn-group btn-group-sm shadow-sm" role="group" aria-label="Góc nhìn">
+                <button class="btn btn-light" data-view="all"><i class="bi bi-arrows-fullscreen"></i> Toàn cảnh</button>
+                <button class="btn btn-light" data-view="clutch">Ly hợp</button>
+                <button class="btn btn-light" data-view="gears">Bánh răng</button>
+                <button class="btn btn-light" data-view="shifter">Cần số</button>
+              </div>
+              <div class="btn-group btn-group-sm shadow-sm" role="group" aria-label="Vỏ hộp số">
+                <input type="radio" class="btn-check" name="shell" id="shCut" value="cut" checked><label class="btn btn-light" for="shCut">Vỏ cắt lớp</label>
+                <input type="radio" class="btn-check" name="shell" id="shFull" value="full"><label class="btn btn-light" for="shFull">Vỏ đầy đủ</label>
+                <input type="radio" class="btn-check" name="shell" id="shHide" value="hide"><label class="btn btn-light" for="shHide">Ẩn vỏ</label>
+              </div>
+              <input type="checkbox" class="btn-check" id="flowToggle" checked>
+              <label class="btn btn-sm btn-light shadow-sm" for="flowToggle"><i class="bi bi-lightning-charge-fill text-warning"></i> Đường truyền lực</label>
+            </div>
+            <div class="gb-alert position-absolute start-50 translate-middle-x" id="gbAlert" hidden></div>
+            <div class="gb-flow position-absolute bottom-0 start-0 m-2 small" id="flowText"></div>
+            <div class="gb-tip position-absolute small" id="gbTip" hidden></div>
+
+            <!-- khoá tính năng Pro -->
+            <div class="gb-gate position-absolute top-0 start-0 w-100 h-100 p-3" id="gate" hidden>
+              <div class="card shadow-lg text-center" style="max-width: 460px">
+                <div class="card-body p-4">
+                  <div class="display-6 text-warning mb-2"><i class="bi bi-lock-fill"></i></div>
+                  <h2 class="h4 fw-bold">Tính năng dành cho gói Pro</h2>
+                  <p class="text-body-secondary">Mở khoá mô hình 3D cắt lớp hộp số sàn, mô phỏng côn – số và các bài hướng dẫn từng bước.</p>
+                  <ul class="list-unstyled text-start small mx-auto mb-3" style="max-width: 320px">
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Xoay 360°, cắt lớp, xem tên từng chi tiết</li>
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Mô phỏng ly hợp, đồng tốc, sơ đồ H</li>
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Hướng dẫn khởi hành, lên số, các lỗi hay gặp</li>
+                  </ul>
+                  <a class="btn btn-warning w-100 fw-semibold mb-2" href="nang-cap.html?plan=Y"><i class="bi bi-gem"></i> Nâng cấp Pro – chỉ từ 49.000đ</a>
+                  <button class="btn btn-outline-secondary w-100 mb-2" id="btnTrial" type="button"><i class="bi bi-hourglass-split"></i> Dùng thử miễn phí 3 phút</button>
+                  <a class="small" href="nang-cap.html#kich-hoat">Đã có mã kích hoạt?</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer small text-body-secondary d-flex flex-wrap justify-content-between gap-2">
+            <span><i class="bi bi-mouse"></i> Kéo chuột để xoay 360° · cuộn để phóng to · chuột phải để di chuyển · rê chuột lên chi tiết để xem tên</span>
+            <span id="trialBadge" class="badge text-bg-warning" hidden></span>
+          </div>
+        </div>
+
+        <!-- số liệu -->
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 mt-1" id="readouts">
+          <div class="col"><div class="card h-100"><div class="card-body p-2"><div class="small text-body-secondary">Động cơ</div><div class="fw-bold fs-5" id="rEngine">0</div><div class="small text-body-secondary">vòng/phút</div></div></div></div>
+          <div class="col"><div class="card h-100"><div class="card-body p-2"><div class="small text-body-secondary">Trục sơ cấp</div><div class="fw-bold fs-5" id="rInput">0</div><div class="small text-body-secondary">vòng/phút</div></div></div></div>
+          <div class="col"><div class="card h-100"><div class="card-body p-2"><div class="small text-body-secondary">Trục trung gian</div><div class="fw-bold fs-5" id="rCounter">0</div><div class="small text-body-secondary">vòng/phút</div></div></div></div>
+          <div class="col"><div class="card h-100"><div class="card-body p-2"><div class="small text-body-secondary">Trục thứ cấp</div><div class="fw-bold fs-5" id="rOutput">0</div><div class="small text-body-secondary">vòng/phút</div></div></div></div>
+          <div class="col"><div class="card h-100"><div class="card-body p-2"><div class="small text-body-secondary">Tốc độ xe</div><div class="fw-bold fs-5" id="rSpeed">0</div><div class="small text-body-secondary">km/h</div></div></div></div>
+          <div class="col"><div class="card h-100"><div class="card-body p-2"><div class="small text-body-secondary">Số · tỉ số</div><div class="fw-bold fs-5" id="rGear">N</div><div class="small text-body-secondary" id="rRatio">–</div></div></div></div>
+        </div>
+      </div>
+
+      <!-- ============ BẢNG ĐIỀU KHIỂN ============ -->
+      <div class="col-xl-4">
+        <fieldset id="controls" class="vstack gap-3">
+          <div class="card shadow-sm">
+            <div class="card-header bg-body-tertiary d-flex justify-content-between align-items-center">
+              <span class="fw-semibold"><i class="bi bi-arrow-down-square text-primary"></i> Chân côn (ly hợp)</span>
+              <span class="badge" id="clutchBadge">Đóng</span>
+            </div>
+            <div class="card-body">
+              <label for="pedal" class="form-label small d-flex justify-content-between mb-1"><span>Nhả hết</span><span id="pedalPct">0%</span><span>Đạp hết</span></label>
+              <input type="range" class="form-range" id="pedal" min="0" max="100" value="0">
+              <div class="progress mb-1" role="progressbar" aria-label="Mức ăn khớp ly hợp" style="height: 8px">
+                <div class="progress-bar bg-success" id="clutchBar" style="width: 100%"></div>
+              </div>
+              <div class="small text-body-secondary mb-2">Mức ăn khớp ly hợp: <b id="clutchPct">100%</b> · mô-men truyền <b id="clutchTq">0</b> N·m</div>
+              <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-primary btn-sm" id="btnPress" type="button"><i class="bi bi-chevron-double-down"></i> Đạp côn</button>
+                <button class="btn btn-outline-primary btn-sm" id="btnSlow" type="button">Nhả côn từ từ</button>
+                <button class="btn btn-outline-danger btn-sm" id="btnDump" type="button">Nhả côn đột ngột</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm">
+            <div class="card-header bg-body-tertiary fw-semibold"><i class="bi bi-joystick text-primary"></i> Cần số (sơ đồ H)</div>
+            <div class="card-body d-flex align-items-center gap-3">
+              <svg viewBox="0 0 220 170" class="h-pattern flex-none" id="hSvg" role="group" aria-label="Sơ đồ cần số">
+                <path d="M50 30V140M110 30V140M170 30V140M50 85H170" class="h-slot"/>
+                <g class="h-pos" data-gear="1" tabindex="0" role="button" aria-label="Số 1"><circle cx="50" cy="30" r="17"/><text x="50" y="31">1</text></g>
+                <g class="h-pos" data-gear="2" tabindex="0" role="button" aria-label="Số 2"><circle cx="50" cy="140" r="17"/><text x="50" y="141">2</text></g>
+                <g class="h-pos" data-gear="3" tabindex="0" role="button" aria-label="Số 3"><circle cx="110" cy="30" r="17"/><text x="110" y="31">3</text></g>
+                <g class="h-pos" data-gear="4" tabindex="0" role="button" aria-label="Số 4"><circle cx="110" cy="140" r="17"/><text x="110" y="141">4</text></g>
+                <g class="h-pos" data-gear="5" tabindex="0" role="button" aria-label="Số 5"><circle cx="170" cy="30" r="17"/><text x="170" y="31">5</text></g>
+                <g class="h-pos" data-gear="R" tabindex="0" role="button" aria-label="Số lùi"><circle cx="170" cy="140" r="17"/><text x="170" y="141">R</text></g>
+                <g class="h-pos" data-gear="N" tabindex="0" role="button" aria-label="Số mo (N)"><circle cx="110" cy="85" r="13"/><text x="110" y="86">N</text></g>
+                <circle id="hKnob" cx="110" cy="85" r="9" class="h-knob"/>
+              </svg>
+              <div class="small text-body-secondary">
+                Bấm vào vị trí số để gạt cần. <b>Phải đạp hết côn</b> trước khi vào số, nếu không bánh răng sẽ kêu “rắc”.
+                Về số N thì không cần đạp côn.
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm">
+            <div class="card-header bg-body-tertiary fw-semibold"><i class="bi bi-speedometer2 text-primary"></i> Ga &amp; phanh</div>
+            <div class="card-body">
+              <label for="throttle" class="form-label small d-flex justify-content-between mb-1"><span>Chân ga</span><span id="throttlePct">0%</span></label>
+              <input type="range" class="form-range" id="throttle" min="0" max="100" value="0">
+              <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-outline-secondary btn-sm" id="btnBrake" type="button"><i class="bi bi-sign-stop"></i> Giữ để phanh</button>
+                <button class="btn btn-outline-success btn-sm" id="btnRestart" type="button" hidden><i class="bi bi-power"></i> Khởi động lại</button>
+                <button class="btn btn-outline-secondary btn-sm ms-auto" id="btnReset" type="button"><i class="bi bi-arrow-counterclockwise"></i> Đặt lại</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm">
+            <div class="card-header bg-body-tertiary fw-semibold"><i class="bi bi-play-circle text-success"></i> Mô phỏng từng bước</div>
+            <div class="card-body">
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button class="btn btn-success btn-sm" data-demo="start"><i class="bi bi-play-fill"></i> Khởi hành số 1</button>
+                <button class="btn btn-outline-success btn-sm" data-demo="up">Lên số 2</button>
+                <button class="btn btn-outline-danger btn-sm" data-demo="stall">Lỗi: nhả côn đột ngột</button>
+                <button class="btn btn-outline-danger btn-sm" data-demo="grind">Lỗi: vào số không đạp côn</button>
+              </div>
+              <ol class="list-group list-group-numbered small" id="demoSteps">
+                <li class="list-group-item text-body-secondary">Chọn một kịch bản để xem từng bước.</li>
+              </ol>
+              <div class="small mt-2" id="demoDetail"></div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <!-- ============ GIẢI THÍCH ============ -->
+    <div class="row g-3 mt-2">
+      <div class="col-lg-4">
+        <div class="card h-100">
+          <div class="card-header fw-semibold"><i class="bi bi-diagram-3 text-success"></i> Các chi tiết chính</div>
+          <div class="list-group list-group-flush small" id="partList"></div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card h-100">
+          <div class="card-header fw-semibold"><i class="bi bi-gear text-success"></i> Nguyên lý sang số</div>
+          <div class="card-body small">
+            <p>Các bánh răng trên trục thứ cấp <b>luôn ăn khớp</b> với trục trung gian nhưng <b>lồng không</b> trên trục – chúng quay tự do. Muốn vào số, ống gài (bộ đồng tốc) trượt sang và khoá một bánh răng vào trục thứ cấp.</p>
+            <p>Trước khi khoá, <b>vành đồng tốc</b> dùng ma sát để bánh răng và trục quay cùng tốc độ – vì vậy phải ngắt ly hợp (đạp côn) để trục sơ cấp không còn bị động cơ kéo.</p>
+            <p class="mb-0">Đường truyền lực ở số 1–3, 5: <i>động cơ → ly hợp → trục sơ cấp → bánh răng dẫn động → trục trung gian → cặp bánh răng số → ống gài → trục thứ cấp</i>. Ở số 4, ống gài khoá thẳng trục sơ cấp với trục thứ cấp (1:1).</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card h-100">
+          <div class="card-header fw-semibold"><i class="bi bi-table text-success"></i> Tỉ số truyền của mô hình</div>
+          <div class="card-body p-0">
+            <table class="table table-sm mb-0 small align-middle">
+              <thead><tr><th class="ps-3">Số</th><th>Số răng (TG → TC)</th><th class="text-end pe-3">Tỉ số</th></tr></thead>
+              <tbody id="ratioTable"></tbody>
+            </table>
+            <div class="small text-body-secondary px-3 py-2">Cặp dẫn động 16 → 32 răng (2:1). Tỉ số cuối (vi sai) 4,1.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ============ CHÂN TRANG ============ -->
+<footer class="border-top bg-body-tertiary pt-5 pb-4 mt-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <a class="d-flex align-items-center gap-2 fw-bold fs-5 text-body text-decoration-none mb-2" href="index.html">
+          <span class="brand-icon bg-success text-white rounded-3"><i class="bi bi-shield-check"></i></span> HocLaiXe
+        </a>
+        <p class="small text-body-secondary">Nền tảng luyện thi sát hạch lái xe hạng B: sa hình 3D 11 bài, lý thuyết, mô phỏng tình huống và cấu tạo hộp số sàn 3D (Pro).</p>
+        <div class="small text-body-secondary"><i class="bi bi-envelope"></i> hotro@hoclaixe.demo</div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-mortarboard text-success"></i> Ôn luyện</h6>
+        <ul class="list-unstyled small vstack gap-2">
+          <li><a class="link-secondary text-decoration-none" href="sa-hinh.html">Thi thử sa hình</a></li>
+          <li><a class="link-secondary text-decoration-none" href="sa-hinh.html?mode=practice">Lái thử tự do</a></li>
+          <li><a class="link-secondary text-decoration-none" href="ly-thuyet.html">Thi lý thuyết</a></li>
+          <li><a class="link-secondary text-decoration-none" href="mo-phong.html">Mô phỏng tình huống</a></li>
+          <li><a class="link-secondary text-decoration-none" href="xe-co-ban.html">Ô tô cơ bản 3D</a></li>
+          <li><a class="link-secondary text-decoration-none" href="cam-nang.html">Cẩm nang kỹ thuật</a></li>
+          <li><a class="link-secondary text-decoration-none" href="hop-so.html">Cấu tạo hộp số <span class="badge text-bg-warning">Pro</span></a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-gem text-success"></i> Gói Pro</h6>
+        <ul class="list-unstyled small vstack gap-2">
+          <li><a class="link-secondary text-decoration-none" href="index.html#bang-gia">Bảng giá</a></li>
+          <li><a class="link-secondary text-decoration-none" href="nang-cap.html">Nâng cấp Pro</a></li>
+          <li><a class="link-secondary text-decoration-none" href="nang-cap.html#kich-hoat">Nhập mã kích hoạt</a></li>
+          <li><a class="link-secondary text-decoration-none" href="nang-cap.html#chinh-sach">Chính sách hoàn tiền</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-file-earmark-text text-success"></i> Văn bản</h6>
+        <ul class="list-unstyled small vstack gap-2">
+          <li><a class="link-secondary text-decoration-none" href="https://xaydungchinhsach.chinhphu.vn/toan-van-thong-tu-12-2025-tt-bca-cua-bo-cong-an-quy-dinh-ve-sat-hach-cap-giay-phep-lai-xe-119250303174347028.htm" target="_blank" rel="noopener">Thông tư 12/2025/TT-BCA</a></li>
+          <li><a class="link-secondary text-decoration-none" href="https://cdn.thuvienphapluat.vn/phap-luat/2022-2/NTMH/21122024/QCVN-40-2024.pdf" target="_blank" rel="noopener">QCVN 40:2024/BGTVT</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-gear text-success"></i> Giao diện</h6>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Giao diện">
+          <button type="button" class="btn btn-outline-secondary" data-theme-set="light"><i class="bi bi-sun"></i> Sáng</button>
+          <button type="button" class="btn btn-outline-secondary" data-theme-set="dark"><i class="bi bi-moon-stars"></i> Tối</button>
+        </div>
+      </div>
+    </div>
+    <hr class="my-4">
+    <div class="d-flex flex-wrap justify-content-between gap-2 small text-body-secondary">
+      <span>© <span id="year">2026</span> HocLaiXe – công cụ luyện tập, không phải phần mềm sát hạch chính thức.</span>
+      <span>Thanh toán trên trang là bản demo, không trừ tiền thật.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/license.js"></script>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="js/gearbox.js"></script>
+<script src="js/hop-so.js"></script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="vi" data-bs-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<title>Ô tô cơ bản 3D cho người mới – HocLaiXe</title>
+<meta name="description" content="Làm quen ô tô bằng mô hình 3D: khoang động cơ, đèn, gạt mưa, lốp; buồng lái với vô-lăng, cần số, xi nhan, bảng đồng hồ và đèn cảnh báo.">
+<script>
+  // Áp chủ đề trước khi vẽ trang để không nháy màu
+  (function () {
+    try { var t = localStorage.getItem('sahinh_theme'); if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-bs-theme', t); } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
+<link rel="stylesheet" href="css/home.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<!-- ============ THANH ĐIỀU HƯỚNG ============ -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="index.html">
+      <span class="brand-icon bg-success text-white rounded-3"><i class="bi bi-shield-check"></i></span>
+      HocLaiXe
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Mở menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+        <li class="nav-item"><a class="nav-link" href="sa-hinh.html"><i class="bi bi-car-front"></i> Sa hình <span class="badge text-bg-warning">3D</span></a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-mortarboard"></i> Học tập</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="sa-hinh.html"><i class="bi bi-car-front"></i> Sa hình 3D</a></li>
+            <li><a class="dropdown-item" href="ly-thuyet.html"><i class="bi bi-journal-check"></i> Thi lý thuyết</a></li>
+            <li><a class="dropdown-item" href="mo-phong.html"><i class="bi bi-play-btn"></i> Mô phỏng tình huống</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item active" aria-current="page" href="xe-co-ban.html"><i class="bi bi-box"></i> Ô tô cơ bản 3D</a></li>
+            <li><a class="dropdown-item" href="hop-so.html"><i class="bi bi-gear-wide-connected"></i> Cấu tạo hộp số sàn <span class="badge text-bg-warning">Pro</span></a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="index.html#noi-dung">11 bài thi</a></li>
+        <li class="nav-item"><a class="nav-link" href="cam-nang.html"><i class="bi bi-book-half"></i> Cẩm nang</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#bang-gia">Bảng giá</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html#lien-he">Liên hệ</a></li>
+        <li class="nav-item">
+          <button class="btn btn-link nav-link px-2" id="themeToggle" type="button" aria-label="Chuyển giao diện sáng/tối" title="Chuyển giao diện sáng/tối">
+            <i class="bi bi-moon-stars-fill"></i><span class="d-lg-none ms-2">Giao diện sáng / tối</span>
+          </button>
+        </li>
+        <li class="nav-item ms-lg-2"><a class="btn btn-success btn-sm px-3" data-pro-nav href="nang-cap.html"><i class="bi bi-gem"></i> Nâng cấp Pro</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="flex-grow-1">
+  <div class="container-xxl my-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb small mb-2">
+        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Ô tô cơ bản 3D</li>
+      </ol>
+    </nav>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+      <div>
+        <h1 class="h3 fw-bold mb-1"><i class="bi bi-car-front-fill text-success"></i> Ô tô cơ bản cho người mới lái</h1>
+        <p class="text-body-secondary mb-0">Bấm vào các điểm đánh số trên xe để tìm hiểu · thử bật đèn, xi nhan, gạt mưa, còi ngay trên mô hình</p>
+      </div>
+      <div class="btn-group" role="group" aria-label="Góc nhìn">
+        <input type="radio" class="btn-check" name="view" id="vExt" value="ext" checked>
+        <label class="btn btn-outline-success" for="vExt"><i class="bi bi-car-front"></i> Bên ngoài xe</label>
+        <input type="radio" class="btn-check" name="view" id="vInt" value="int">
+        <label class="btn btn-outline-success" for="vInt"><i class="bi bi-person-video2"></i> Buồng lái</label>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-xl-8">
+        <div class="card shadow-sm overflow-hidden">
+          <div class="car-viewer position-relative" id="viewer">
+            <div class="position-absolute top-0 start-0 m-2 d-flex flex-wrap gap-2 car-toolbar">
+              <div class="btn-group btn-group-sm shadow-sm" role="group" aria-label="Vị trí camera" id="presets"></div>
+              <input type="checkbox" class="btn-check" id="night">
+              <label class="btn btn-sm btn-light shadow-sm" for="night"><i class="bi bi-moon-stars"></i> Trời tối</label>
+              <input type="checkbox" class="btn-check" id="showDots" checked>
+              <label class="btn btn-sm btn-light shadow-sm" for="showDots"><i class="bi bi-123"></i> Điểm chú thích</label>
+            </div>
+            <div class="car-dots" id="dots"></div>
+            <div class="car-toast position-absolute start-50 translate-middle-x" id="toast" hidden></div>
+          </div>
+          <div class="card-footer small text-body-secondary">
+            <i class="bi bi-mouse"></i> <span id="hint">Kéo chuột để xoay quanh xe · cuộn để phóng to · bấm số để xem chi tiết</span>
+          </div>
+        </div>
+
+        <!-- bảng điều khiển xe -->
+        <div class="card shadow-sm mt-3">
+          <div class="card-header bg-body-tertiary fw-semibold"><i class="bi bi-sliders text-primary"></i> Thử điều khiển xe</div>
+          <div class="card-body">
+            <div class="row g-3 small">
+              <div class="col-sm-6 col-lg-4">
+                <div class="fw-semibold mb-1">Chìa khoá / khởi động</div>
+                <div class="btn-group btn-group-sm w-100" role="group" aria-label="Chìa khoá">
+                  <input type="radio" class="btn-check" name="ign" id="ignOff" value="off" checked><label class="btn btn-outline-secondary" for="ignOff">Tắt</label>
+                  <input type="radio" class="btn-check" name="ign" id="ignOn" value="on"><label class="btn btn-outline-secondary" for="ignOn">ON</label>
+                  <input type="radio" class="btn-check" name="ign" id="ignRun" value="run"><label class="btn btn-outline-secondary" for="ignRun">Nổ máy</label>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-4">
+                <div class="fw-semibold mb-1">Xi nhan</div>
+                <div class="btn-group btn-group-sm w-100" role="group" aria-label="Xi nhan">
+                  <input type="radio" class="btn-check" name="sig" id="sigL" value="-1"><label class="btn btn-outline-secondary" for="sigL"><i class="bi bi-arrow-left"></i> Trái</label>
+                  <input type="radio" class="btn-check" name="sig" id="sig0" value="0" checked><label class="btn btn-outline-secondary" for="sig0">Tắt</label>
+                  <input type="radio" class="btn-check" name="sig" id="sigR" value="1"><label class="btn btn-outline-secondary" for="sigR">Phải <i class="bi bi-arrow-right"></i></label>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-4">
+                <div class="fw-semibold mb-1">Đèn chiếu sáng</div>
+                <div class="btn-group btn-group-sm w-100" role="group" aria-label="Đèn">
+                  <input type="radio" class="btn-check" name="lights" id="lOff" value="off" checked><label class="btn btn-outline-secondary" for="lOff">Tắt</label>
+                  <input type="radio" class="btn-check" name="lights" id="lLow" value="low"><label class="btn btn-outline-secondary" for="lLow">Cốt</label>
+                  <input type="radio" class="btn-check" name="lights" id="lHigh" value="high"><label class="btn btn-outline-secondary" for="lHigh">Pha</label>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-4">
+                <div class="fw-semibold mb-1">Gạt mưa</div>
+                <div class="d-flex gap-1">
+                  <div class="btn-group btn-group-sm flex-grow-1" role="group" aria-label="Gạt mưa">
+                    <input type="radio" class="btn-check" name="wiper" id="wOff" value="off" checked><label class="btn btn-outline-secondary" for="wOff">Tắt</label>
+                    <input type="radio" class="btn-check" name="wiper" id="wSlow" value="slow"><label class="btn btn-outline-secondary" for="wSlow">Chậm</label>
+                    <input type="radio" class="btn-check" name="wiper" id="wFast" value="fast"><label class="btn btn-outline-secondary" for="wFast">Nhanh</label>
+                  </div>
+                  <button class="btn btn-outline-info btn-sm" id="btnWash" type="button" title="Phun nước rửa kính"><i class="bi bi-droplet-half"></i></button>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-4">
+                <div class="fw-semibold mb-1">Cần số</div>
+                <div class="btn-group btn-group-sm w-100" role="group" aria-label="Cần số">
+                  <input type="radio" class="btn-check" name="gear" id="gP" value="P" checked><label class="btn btn-outline-secondary" for="gP">P</label>
+                  <input type="radio" class="btn-check" name="gear" id="gR" value="R"><label class="btn btn-outline-secondary" for="gR">R</label>
+                  <input type="radio" class="btn-check" name="gear" id="gN" value="N"><label class="btn btn-outline-secondary" for="gN">N</label>
+                  <input type="radio" class="btn-check" name="gear" id="gD" value="D"><label class="btn btn-outline-secondary" for="gD">D</label>
+                </div>
+              </div>
+              <div class="col-sm-6 col-lg-4">
+                <div class="fw-semibold mb-1">Khác</div>
+                <div class="d-flex flex-wrap gap-1">
+                  <input type="checkbox" class="btn-check" id="hazard"><label class="btn btn-outline-danger btn-sm" for="hazard" title="Đèn cảnh báo nguy hiểm"><i class="bi bi-exclamation-triangle-fill"></i></label>
+                  <button class="btn btn-outline-secondary btn-sm" id="btnHorn" type="button"><i class="bi bi-megaphone"></i> Còi</button>
+                  <button class="btn btn-outline-secondary btn-sm" id="btnBrake" type="button"><i class="bi bi-sign-stop"></i> Phanh</button>
+                  <input type="checkbox" class="btn-check" id="handbrake" checked><label class="btn btn-outline-secondary btn-sm" for="handbrake">Phanh tay</label>
+                  <input type="checkbox" class="btn-check" id="belt"><label class="btn btn-outline-secondary btn-sm" for="belt">Dây an toàn</label>
+                </div>
+              </div>
+              <div class="col-12 d-flex flex-wrap gap-2">
+                <input type="checkbox" class="btn-check" id="hood"><label class="btn btn-outline-success btn-sm" for="hood"><i class="bi bi-box-arrow-up"></i> Mở capo</label>
+                <input type="checkbox" class="btn-check" id="fuelDoor"><label class="btn btn-outline-success btn-sm" for="fuelDoor"><i class="bi bi-fuel-pump"></i> Mở nắp bình xăng</label>
+                <input type="checkbox" class="btn-check" id="manual"><label class="btn btn-outline-success btn-sm" for="manual"><i class="bi bi-gear"></i> Hiện bàn đạp côn (xe số sàn)</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- thông tin chi tiết -->
+      <div class="col-xl-4">
+        <div class="vstack gap-3">
+          <div class="card shadow-sm border-success-subtle" id="info">
+            <div class="card-body">
+              <div class="d-flex align-items-start gap-2 mb-2">
+                <span class="car-dot-static" id="infoNum">?</span>
+                <h2 class="h5 fw-bold mb-0" id="infoTitle">Chọn một điểm trên xe</h2>
+              </div>
+              <div class="small" id="infoBody">Bấm vào các điểm đánh số trên mô hình hoặc trong danh sách bên dưới để xem chi tiết.</div>
+              <div class="d-flex flex-wrap gap-2 mt-3" id="infoActions"></div>
+            </div>
+          </div>
+          <div class="card shadow-sm">
+            <div class="card-header fw-semibold d-flex justify-content-between"><span><i class="bi bi-list-ol"></i> Danh sách chi tiết</span><span class="badge text-bg-secondary" id="listCount"></span></div>
+            <div class="list-group list-group-flush small car-list" id="list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ============ CHÂN TRANG ============ -->
+<footer class="border-top bg-body-tertiary pt-5 pb-4 mt-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <a class="d-flex align-items-center gap-2 fw-bold fs-5 text-body text-decoration-none mb-2" href="index.html">
+          <span class="brand-icon bg-success text-white rounded-3"><i class="bi bi-shield-check"></i></span> HocLaiXe
+        </a>
+        <p class="small text-body-secondary">Nền tảng luyện thi sát hạch lái xe hạng B: sa hình 3D 11 bài, lý thuyết, mô phỏng tình huống và cấu tạo hộp số sàn 3D (Pro).</p>
+        <div class="small text-body-secondary"><i class="bi bi-envelope"></i> hotro@hoclaixe.demo</div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-mortarboard text-success"></i> Ôn luyện</h6>
+        <ul class="list-unstyled small vstack gap-2">
+          <li><a class="link-secondary text-decoration-none" href="sa-hinh.html">Thi thử sa hình</a></li>
+          <li><a class="link-secondary text-decoration-none" href="sa-hinh.html?mode=practice">Lái thử tự do</a></li>
+          <li><a class="link-secondary text-decoration-none" href="ly-thuyet.html">Thi lý thuyết</a></li>
+          <li><a class="link-secondary text-decoration-none" href="mo-phong.html">Mô phỏng tình huống</a></li>
+          <li><a class="link-secondary text-decoration-none" href="xe-co-ban.html">Ô tô cơ bản 3D</a></li>
+          <li><a class="link-secondary text-decoration-none" href="cam-nang.html">Cẩm nang kỹ thuật</a></li>
+          <li><a class="link-secondary text-decoration-none" href="hop-so.html">Cấu tạo hộp số <span class="badge text-bg-warning">Pro</span></a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-gem text-success"></i> Gói Pro</h6>
+        <ul class="list-unstyled small vstack gap-2">
+          <li><a class="link-secondary text-decoration-none" href="index.html#bang-gia">Bảng giá</a></li>
+          <li><a class="link-secondary text-decoration-none" href="nang-cap.html">Nâng cấp Pro</a></li>
+          <li><a class="link-secondary text-decoration-none" href="nang-cap.html#kich-hoat">Nhập mã kích hoạt</a></li>
+          <li><a class="link-secondary text-decoration-none" href="nang-cap.html#chinh-sach">Chính sách hoàn tiền</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-file-earmark-text text-success"></i> Văn bản</h6>
+        <ul class="list-unstyled small vstack gap-2">
+          <li><a class="link-secondary text-decoration-none" href="https://xaydungchinhsach.chinhphu.vn/toan-van-thong-tu-12-2025-tt-bca-cua-bo-cong-an-quy-dinh-ve-sat-hach-cap-giay-phep-lai-xe-119250303174347028.htm" target="_blank" rel="noopener">Thông tư 12/2025/TT-BCA</a></li>
+          <li><a class="link-secondary text-decoration-none" href="https://cdn.thuvienphapluat.vn/phap-luat/2022-2/NTMH/21122024/QCVN-40-2024.pdf" target="_blank" rel="noopener">QCVN 40:2024/BGTVT</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="fw-bold text-uppercase small"><i class="bi bi-gear text-success"></i> Giao diện</h6>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Giao diện">
+          <button type="button" class="btn btn-outline-secondary" data-theme-set="light"><i class="bi bi-sun"></i> Sáng</button>
+          <button type="button" class="btn btn-outline-secondary" data-theme-set="dark"><i class="bi bi-moon-stars"></i> Tối</button>
+        </div>
+      </div>
+    </div>
+    <hr class="my-4">
+    <div class="d-flex flex-wrap justify-content-between gap-2 small text-body-secondary">
+      <span>© <span id="year">2026</span> HocLaiXe – công cụ luyện tập, không phải phần mềm sát hạch chính thức.</span>
+      <span>Thanh toán trên trang là bản demo, không trừ tiền thật.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/license.js"></script>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="js/xe-3d.js"></script>
+</body>
+</html>

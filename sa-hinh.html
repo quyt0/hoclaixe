@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<title>HocLaiXe – Sa hình 3D</title>
+<meta name="description" content="Mô phỏng thi sa hình 3D 11 bài, hạng B số tự động – chạy hoàn toàn trên trình duyệt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="stage"></div>
+
+<div id="loading" class="overlay">
+  <div class="loader"><div class="spin"></div><p>Đang dựng sa hình…</p></div>
+</div>
+
+<!-- ============ MENU / CHUẨN BỊ THI ============ -->
+<div id="menu" class="overlay" hidden>
+  <div class="panel prep">
+    <header class="prep-head">
+      <div class="shield">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <div>
+        <h1>Chuẩn Bị Thi Sát Hạch</h1>
+        <p class="sub">Sa hình 11 bài hạng B theo Thông tư 12/2025/TT-BCA · QCVN 40:2024</p>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="row between">
+        <div class="row gap8">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Không cần mạng</span>
+          <span class="ready">● Sẵn sàng thi</span>
+        </div>
+        <button class="chip gold" data-open="guide">Luật chấm điểm ›</button>
+      </div>
+      <p class="muted small">Không cần tài khoản · Không giới hạn lượt thi · Kết quả lưu trên máy này</p>
+      <hr>
+      <div class="row between baseline">
+        <span class="label">Lượt đã thi</span>
+        <span class="big"><b id="statCount">0</b><small> · đạt <span id="statPass">0</span> · cao nhất <span id="statBest">–</span></small></span>
+      </div>
+      <div class="bar"><i id="statBar" style="width:0%"></i></div>
+      <hr>
+      <div class="row between">
+        <span class="muted">Hộp số:</span>
+        <label class="radio on"><span class="dot"></span>Tự Động (AT)</label>
+      </div>
+      <div class="row between mt12">
+        <span class="muted">Góc nhìn:</span>
+        <div class="seg" id="camSeg">
+          <button data-cam="cabin" class="on">Trong xe</button>
+          <button data-cam="chase">Sau xe</button>
+          <button data-cam="top">Từ trên</button>
+        </div>
+      </div>
+      <div class="row between mt12 toggles">
+        <label class="tg"><input type="checkbox" id="optVoice" checked><span></span>Giọng đọc</label>
+        <label class="tg"><input type="checkbox" id="optSound" checked><span></span>Âm thanh</label>
+        <label class="tg"><input type="checkbox" id="optAssist" checked><span></span>Trợ giúp</label>
+        <label class="tg"><input type="checkbox" id="optMirrors" checked><span></span>Gương</label>
+      </div>
+    </section>
+
+    <button class="cta" id="btnStart">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12.5-7.5z"/></svg>
+      Xác Nhận Bắt Đầu Thi
+    </button>
+    <div class="row gap12 two">
+      <button class="btn indigo" id="btnPractice">🚘 Lái thử tự do</button>
+      <button class="btn amber" data-open="guide">📖 Hướng dẫn &amp; phím</button>
+    </div>
+    <button class="link" data-open="history">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      Lịch sử thi sát hạch
+    </button>
+    <a class="link" href="index.html">← Về trang chủ</a>
+  </div>
+</div>
+
+<!-- ============ HUD ============ -->
+<div id="hud" hidden>
+  <div class="hud-tl glass">
+    <div class="lesson-num" id="lessonNum">BÀI 1</div>
+    <div class="lesson-title" id="lessonTitle">Xuất phát</div>
+    <div class="dots" id="dots"></div>
+    <div class="times"><span>⏱ <b id="timeTotal">00:00</b></span><span id="modeTag" class="tag">THI</span></div>
+  </div>
+
+  <div class="hud-tr glass" id="scoreBox">
+    <div class="score-wrap"><div class="score" id="score">100</div><div class="score-lbl">điểm</div></div>
+    <ul class="pen" id="penList"></ul>
+  </div>
+
+  <div id="toasts"></div>
+  <div id="assist" hidden></div>
+  <div id="emBanner" hidden></div>
+  <div id="miniLight" hidden><i class="r"></i><i class="y"></i><i class="g"></i></div>
+  <div id="countdown" hidden></div>
+
+  <canvas id="minimap" width="240" height="200"></canvas>
+
+  <div class="dash glass">
+    <button class="ind" id="indL" data-act="sigL" title="Xi nhan trái (Z)"><svg viewBox="0 0 24 24"><path d="M10 5 3 12l7 7v-4h11V9H10z"/></svg></button>
+    <div class="speedo">
+      <div class="spd" id="speed">0</div><div class="unit">km/h</div>
+    </div>
+    <div class="gears">
+      <button data-act="gear:P" id="gP">P</button>
+      <button data-act="gear:R" id="gR">R</button>
+      <button data-act="gear:N" id="gN">N</button>
+      <button data-act="gear:D" id="gD">D</button>
+    </div>
+    <div class="lamps" title="Đèn trên xe sát hạch"><i id="lampGo"></i><i id="lampEm"></i></div>
+    <div class="wheel-ind"><svg id="wheelSvg" viewBox="-20 -20 40 40"><circle r="16" fill="none" stroke="currentColor" stroke-width="4"/><path d="M-16 0H16M0 0V16" stroke="currentColor" stroke-width="4"/><circle r="4" fill="currentColor"/></svg></div>
+    <div class="icons">
+      <button class="ic" id="icBelt" data-act="belt" title="Dây an toàn (B)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="4.5" r="2"/><path d="M8 21v-6l-1-5 5-2 5 2-1 5v6M8 8l9 9"/></svg>
+      </button>
+      <button class="ic" id="icHb" data-act="handbrake" title="Phanh tay (Space)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="6"/><path d="M4.5 6a10 10 0 0 0 0 12M19.5 6a10 10 0 0 1 0 12"/><text x="12" y="15.5" font-size="8" text-anchor="middle" fill="currentColor" stroke="none" font-weight="700">P</text></svg>
+      </button>
+      <button class="ic" id="icHz" data-act="hazard" title="Đèn cảnh báo (H)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 20h20z"/><path d="M12 9 7 17.5h10z"/></svg>
+      </button>
+      <button class="ic" data-act="view" title="Góc nhìn (V)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <button class="ind" id="indR" data-act="sigR" title="Xi nhan phải (X)"><svg viewBox="0 0 24 24"><path d="M14 5l7 7-7 7v-4H3V9h11z"/></svg></button>
+  </div>
+
+  <button class="pause-btn glass" data-act="pause" title="Tạm dừng (Esc)">❚❚</button>
+
+  <div class="keys glass" id="keysHelp">
+    <b>Phím</b>
+    <span><kbd>W</kbd><kbd>S</kbd> ga / phanh</span>
+    <span><kbd>A</kbd><kbd>D</kbd> đánh lái · <kbd>F</kbd> trả lái giữa</span>
+    <span><kbd>Shift</kbd> + lái: đánh lái chậm</span>
+    <span><kbd>1</kbd>–<kbd>4</kbd> số P R N D</span>
+    <span><kbd>Z</kbd><kbd>X</kbd> xi nhan · <kbd>C</kbd> tắt</span>
+    <span><kbd>B</kbd> dây · <kbd>Phím cách</kbd> phanh tay</span>
+    <span><kbd>H</kbd> cảnh báo · <kbd>V</kbd> góc nhìn</span>
+    <span><kbd>G</kbd> gương · kéo chuột nhìn quanh</span>
+  </div>
+
+  <div id="touch">
+    <div class="tl">
+      <button data-hold="left">◀</button>
+      <button data-hold="center" class="mid">Giữa</button>
+      <button data-hold="right">▶</button>
+    </div>
+    <div class="tr">
+      <button data-hold="down" class="brake">PHANH</button>
+      <button data-hold="up" class="gas">GA</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TẠM DỪNG ============ -->
+<div id="pause" class="overlay" hidden>
+  <div class="panel">
+    <h2>Tạm dừng</h2>
+    <div id="tpBox" hidden>
+      <p class="muted small">Dịch chuyển tới bài:</p>
+      <div class="tp-grid" id="tpGrid"></div>
+    </div>
+    <div class="col gap10 mt16">
+      <button class="cta sm" id="btnResume">Tiếp tục</button>
+      <button class="btn indigo" id="btnRestart">Làm lại từ đầu</button>
+      <button class="btn ghost" id="btnMenu">Về màn hình chính</button>
+      <a class="btn ghost" href="index.html" style="text-align:center;text-decoration:none">Về trang chủ</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ KẾT QUẢ ============ -->
+<div id="result" class="overlay" hidden>
+  <div class="panel">
+    <div class="res-head" id="resHead">
+      <div class="res-score" id="resScore">0</div>
+      <div>
+        <h2 id="resTitle">ĐẠT</h2>
+        <p class="muted" id="resSub"></p>
+      </div>
+    </div>
+    <ul class="res-log" id="resLog"></ul>
+    <div class="row gap12 two mt16">
+      <button class="cta sm" id="btnAgain">Thi lại</button>
+      <button class="btn ghost" id="btnResMenu">Về màn hình chính</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LỊCH SỬ ============ -->
+<div id="history" class="overlay" hidden>
+  <div class="panel wide">
+    <div class="row between"><h2>Lịch sử thi sát hạch</h2><button class="x" data-close>✕</button></div>
+    <div id="histList"></div>
+    <div class="row between mt16"><button class="btn ghost sm" id="btnClearHist">Xoá lịch sử</button><button class="btn indigo sm" data-close>Đóng</button></div>
+  </div>
+</div>
+
+<!-- ============ HƯỚNG DẪN ============ -->
+<div id="guide" class="overlay" hidden>
+  <div class="panel wide">
+    <div class="row between"><h2>Hướng dẫn &amp; luật chấm điểm</h2><button class="x" data-close>✕</button></div>
+    <div class="guide-body">
+      <h3>Điều khiển</h3>
+      <div class="kgrid">
+        <span><kbd>W</kbd>/<kbd>↑</kbd></span><span>Đạp ga (nhả ga xe vẫn bò ~6 km/h ở số D)</span>
+        <span><kbd>S</kbd>/<kbd>↓</kbd></span><span>Đạp phanh</span>
+        <span><kbd>A</kbd><kbd>D</kbd>/<kbd>←</kbd><kbd>→</kbd></span><span>Xoay vô-lăng (nhả phím vô-lăng giữ nguyên góc, như laixe thật)</span>
+        <span><kbd>F</kbd></span><span>Trả lái về giữa</span>
+        <span><kbd>Shift</kbd> + <kbd>A</kbd>/<kbd>D</kbd></span><span>Đánh lái chậm để chỉnh nhỏ (khi qua vệt bánh xe, vào chuồng)</span>
+        <span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd></span><span>Cần số P · R · N · D (chỉ đổi khi xe gần dừng)</span>
+        <span><kbd>Phím cách</kbd></span><span>Kéo / nhả phanh tay</span>
+        <span><kbd>B</kbd></span><span>Thắt / tháo dây an toàn</span>
+        <span><kbd>Z</kbd> <kbd>X</kbd> <kbd>C</kbd></span><span>Xi nhan trái · phải · tắt</span>
+        <span><kbd>H</kbd></span><span>Đèn cảnh báo nguy hiểm</span>
+        <span><kbd>V</kbd></span><span>Đổi góc nhìn (trong xe · sau xe · từ trên). Kéo chuột để nhìn quanh trong xe.</span>
+        <span><kbd>G</kbd></span><span>Bật/tắt gương chiếu hậu (trái · giữa · phải) ở góc nhìn trong xe</span>
+        <span><kbd>Esc</kbd></span><span>Tạm dừng</span>
+      </div>
+      <h3>Lộ trình sân thi</h3>
+      <p>Sân dựng theo sơ đồ sân sát hạch chuẩn đang dùng phổ biến: khu ghép xe dọc ở khối trên bên trái, chữ S ở khối trên giữa, chữ Z (vệt bánh xe + vuông góc) ở khối dưới bên phải, ngã tư có đèn ở giữa sân, xuất phát ở đường dưới, kết thúc ở đường bên trái. Kích thước hình theo QCVN 40:2024/BGTVT, luật chấm theo Phụ lục IV Thông tư 12/2025/TT-BCA.</p>
+      <p><b>1</b> Xuất phát → <b>2</b> Người đi bộ → <b>3</b> Dốc cầu → (rẽ trái lên đường phải, rẽ trái vào làn Z) <b>4</b> Vệt bánh xe &amp; vuông góc → <b>5</b> Ngã tư lần 1 (đi thẳng) → <b>6</b> Chữ S → <b>5</b> Ngã tư lần 2 (đi thẳng) → <b>7</b> Ghép xe dọc → <b>5</b> Ngã tư lần 3 (rẽ trái) → <b>9</b> Đường sắt → <b>10</b> Thay đổi số (tăng tốc) → <b>8</b> Ghép xe ngang → <b>5</b> Ngã tư lần 4 (rẽ phải) → <b>11</b> Kết thúc. Tình huống nguy hiểm xuất hiện ngẫu nhiên ở 1 trong 5 vị trí ngoài bài thi.</p>
+      <p>Số bài theo Thông tư 12/2025 (bài 8 ghép ngang, bài 9 đường sắt, bài 10 thay số); trên nhiều sơ đồ cũ các bài này được đánh số 10 – 8 – 9. Mặt đường có mũi tên chỉ hướng, các hình của hạng C/D/E trong sân chỉ để trang trí.</p>
+      <h3>Quy trình xuất phát</h3>
+      <p>Thắt dây an toàn → khi đèn xanh trên xe sáng (có lệnh xuất phát) bật xi nhan trái → đạp phanh, chuyển số D → nhả phanh tay → qua vạch xuất phát trong 20 giây → tắt xi nhan trong 5 m sau vạch.</p>
+      <h3>Chấm điểm (Phụ lục IV Thông tư 12/2025/TT-BCA)</h3>
+      <p>Thang 100 điểm, <b>đạt từ 80 điểm</b>. Tổng thời gian 18 phút. Tốc độ tối đa 24 km/h (trừ bài thay đổi số). Điểm dưới 80 bị đình chỉ ngay.</p>
+      <table class="rules">
+        <tr><th>Bài</th><th>Lỗi</th><th>Trừ</th></tr>
+        <tr><td>Chung</td><td>Lái xe lên vỉa hè · không thực hiện đúng trình tự bài thi</td><td>ĐC</td></tr>
+        <tr><td>Chung</td><td>Quá tốc độ quy định, cứ 3 giây · quá tổng thời gian, cứ 3 giây</td><td>−1</td></tr>
+        <tr><td>1</td><td>Không thắt dây an toàn · không bật xi nhan trái khi xuất phát · không tắt xi nhan trái sau 5 m</td><td>−5</td></tr>
+        <tr><td>1</td><td>Quá 20 giây không qua vạch xuất phát / quá 30 giây</td><td>−5 / ĐC</td></tr>
+        <tr><td>2, 9</td><td>Không dừng ở vạch · dừng chưa đến vạch (cách quá 500 mm) · dừng quá vạch</td><td>−5</td></tr>
+        <tr><td>3</td><td>Dừng chưa đến vạch (cách quá 500 mm)</td><td>−5</td></tr>
+        <tr><td>3</td><td>Không dừng ở vạch · dừng quá vạch · tụt dốc quá 500 mm · quá 30 giây không qua vạch</td><td>ĐC</td></tr>
+        <tr><td>4</td><td>Bánh trước và bánh sau bên phụ không qua vùng vệt bánh xe</td><td>ĐC</td></tr>
+        <tr><td>4, 6, 7, 8</td><td>Bánh xe đè vạch giới hạn, mỗi lần · đè quá 5 giây, cứ 5 giây</td><td>−5</td></tr>
+        <tr><td>4, 6, 7, 8, 10</td><td>Thời gian thực hiện bài, cứ quá 2 phút</td><td>−5</td></tr>
+        <tr><td>5</td><td>Đi qua ngã tư khi đèn đỏ</td><td>−10</td></tr>
+        <tr><td>5</td><td>Dừng chưa đến vạch · quá vạch · không bật xi nhan khi rẽ · quá 20 giây từ đèn xanh chưa qua vạch kết thúc ngã tư</td><td>−5</td></tr>
+        <tr><td>5</td><td>Quá 30 giây từ đèn xanh chưa qua vạch kết thúc ngã tư</td><td>ĐC</td></tr>
+        <tr><td>7, 8</td><td>Toàn bộ thân xe trong nơi đỗ nhưng chưa có tín hiệu kết thúc</td><td>−5</td></tr>
+        <tr><td>7, 8</td><td>Kết thúc bài còn một phần thân xe ngoài nơi đỗ</td><td>ĐC</td></tr>
+        <tr><td>10</td><td>25 m đầu không tăng tốc trên 24 km/h · 25 m sau không giảm dưới 24 km/h (xe số tự động)</td><td>−5</td></tr>
+        <tr><td>11</td><td>Không bật xi nhan phải khi qua vạch kết thúc</td><td>−5</td></tr>
+        <tr><td>Nguy hiểm</td><td>Không phanh dừng trong 3 giây · không bật tín hiệu nguy hiểm trong 5 giây · không tắt trước khi đi tiếp</td><td>−10 mỗi lỗi</td></tr>
+      </table>
+      <p class="muted small">ĐC = đình chỉ sát hạch. Kích thước hình theo QCVN 40:2024/BGTVT tính cho xe Vios (dài 4,425 m, rộng 1,73 m): vuông góc và quanh co rộng 3,81 m, vệt bánh xe rộng 0,39 m, chuồng ghép dọc 5,43 × 2,33 m (khoảng lùi 5,31 m), chuồng ghép ngang 6,64 × 2,16 m, dốc 15 m · 10 %.</p>
+      <h3>Mẹo</h3>
+      <p>Bài 2, 3, 9: canh cản trước cách vạch 0–50 cm. Bài 4: nhìn <b>Camera bánh phải</b> (góc trên bên phải) để giữ bánh trước bên phải nằm giữa hai vạch vệt; dùng Shift + A/D để chỉnh nhỏ (bật <b>Trợ giúp</b> để xem độ lệch theo cm). Bài 7, 8: dùng gương (G) hoặc góc nhìn <b>Từ trên</b> (V) khi lùi.</p>
+    </div>
+  </div>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="js/course.js"></script>
+<script src="js/car.js"></script>
+<script src="js/world.js"></script>
+<script src="js/voice-files.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/input.js"></script>
+<script src="js/exam.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
